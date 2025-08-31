@@ -1,0 +1,132 @@
+import random
+playing = True
+play_loop = True
+#sets the playing loop to true
+win_count = 0
+lose_count = 0
+#initialize win and lose counters
+
+
+def draw_card():
+    return cards.pop(random.randint(0,len(cards)-1))
+#Drawing card function taking a randomly generated number and popping the index from the card list
+
+def player_turn(playercards):
+    global stand
+    #importing the global variable stand so it works within the function
+    player_choice = input('Would you like to stand or hit? (type "stand" or "hit") ')
+    try:
+        if player_choice == "stand":
+            stand = True
+            return stand, playercards
+        elif player_choice == "hit":
+            playercards.append(draw_card())
+            return stand, playercards
+        else:
+            print("Not a valid input! Lose a turn! ")
+            return stand, playercards
+    except value_error:
+        print("Not a valid input! Lose a turn! ")
+        return stand, playercards
+#a function for the player's turn where they chose to either stand or hit
+def dealer_turn(dealercards):
+    if dealerval < 17:
+        dealercards.append(draw_card())
+        return dealercards
+    else:
+        return dealercards
+#a function for the dealer's turn where if the value of their cards is < 17, they will draw a card
+def calc_val(card_list):
+    val = 0
+    for index in range(len(card_list)):
+        val += card_list[index]
+    return val
+#a function to calculate the value of the player's cards
+def check_val(val):
+    if val <= 21:
+        return True
+    else:
+        return False
+#function that checks if the player or dealer has busted
+def win_check(playerval, dealerval):
+    global win_count
+    global lose_count
+    if playerval > dealerval and playerval <= 21:
+        win_count += 1 
+        return "You win! Dealer's Cards: " + str(dealercards) + " Dealer's Card Value: " + str(dealerval) + " Win Counter: " + str(win_count) + " Lose Counter: " + str(lose_count)
+    elif playerval > 21:
+        lose_count += 1
+        return "You busted! You lose! Dealer's Cards: " + str(dealercards) + " Dealer's Card Value: " + str(dealerval) + " Win Counter: " + str(win_count) + " Lose Counter: " + str(lose_count)
+    elif dealerval > 21:
+        win_count += 1
+        return "Dealer busted! You win! Dealer's Cards: " + str(dealercards) + " Dealer's Card Value: " + str(dealerval) + " Win Counter: " + str(win_count) + " Lose Counter: " + str(lose_count)
+    elif playerval == dealerval:
+        return "It's a tie! Dealer's Cards: " + str(dealercards) + " Dealer's Card Value: " + str(dealerval) + " Win Counter: " + str(win_count) + " Lose Counter: " + str(lose_count)
+    else:
+        lose_count += 1
+        return "You lose! Dealer's Cards: " + str(dealercards) + " Dealer's Card Value: " + str(dealerval) + " Win Counter: " + str(win_count) + " Lose Counter: " + str(lose_count)
+#function to check all possible win conditions after the main loop is broken
+
+print("Welcome to Blackjack! You will be given two cards upon the start of the game. From there, you will chose whether to take another card(hit) or not (stand) The dealer also plays by these same rules. If both you and the dealer chose to stand, the game ends. The goal is to get the combined value of your cards as close to 21 as possible without going over. When asked to chose whether to hit or stand, if you input any other value, you will lose that turn. ")
+print("Have fun!!! ")
+#explaining the rules to a first time player
+
+while play_loop == True:
+    cards = [1,1,1,1,1,1,1,1,2,2,2,2,3,3,3,3,4,4,4,4,5,5,5,5,6,6,6,6,7,7,7,7,8,8,8,8,9,9,9,9,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10]
+#deck of cards with all possible values
+    playercards = []
+    dealercards = []
+#player and dealer hand of cards
+    playerval = 0
+    dealerval = 0
+    stand = False
+#value of the player and dealer hands at game start
+    for i in range(2):
+        playercards.append(draw_card())
+        dealercards.append(draw_card())
+    print("Your cards: " + str(playercards))
+    playerval = calc_val(playercards)
+    print("Your card value: " + str(playerval))
+    playing = check_val(playerval)
+    print("Dealer's first card: " + str(dealercards[0]))
+    dealerval = calc_val(dealercards)
+    playing = check_val(dealerval)
+#player and dealer draw their first two cards
+#players cards and value are shown and the dealer's first card is shown
+    while playing == True:
+#Game loop that will run throughout any one game
+        player_turn(playercards)
+        print("Your cards: " + str(playercards))
+        playerval = calc_val(playercards)
+        print("Your card value: " + str(playerval))
+        playing = check_val(playerval)
+        if playing == False:
+            break
+#Player takes thier turn and we check to see if they busted, hit 21, or nothing and if they did, game over.
+        else:
+            dealer_turn(dealercards)
+            dealerval = calc_val(dealercards)
+            if dealerval >= 17 and stand == True:
+                break
+            else:
+                playing = check_val(dealerval)
+#Dealer takes its turn and we check to see if dealer busted, hit 21, or nothing and if they did, game over.
+    print(win_check(playerval,dealerval))
+#Main game loop is broken and we check to see who won
+    
+    keep_playing = input('Would you like to keep playing?(Type "y" or "n") ')
+    try:
+        if keep_playing == "y":
+            play_loop = True
+        elif keep_playing == "n":
+            play_loop = False
+        else:
+            print("This is not a valid input! Game Over!")
+            break
+    except value_error:
+        print("This is not a valid input! Game Over!")
+        break
+#Asks the player if they want to play another round. If yes, loop again, if no, game ends, if anything else, game ends
+print("Final Wins: " + str(win_count) + " Final Losses: " + str(lose_count))
+print("Thanks for Playing!")
+#prints the final score and thanks for playing.
