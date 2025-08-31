@@ -25,7 +25,7 @@ def player_turn(playercards):
         else:
             print("Not a valid input! Lose a turn! ")
             return stand, playercards
-    except value_error:
+    except ValueError:
         print("Not a valid input! Lose a turn! ")
         return stand, playercards
 #a function for the player's turn where they chose to either stand or hit
@@ -123,7 +123,7 @@ while play_loop == True:
         else:
             print("This is not a valid input! Game Over!")
             break
-    except value_error:
+    except ValueError:
         print("This is not a valid input! Game Over!")
         break
 #Asks the player if they want to play another round. If yes, loop again, if no, game ends, if anything else, game ends
